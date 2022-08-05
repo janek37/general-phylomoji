@@ -1,38 +1,32 @@
-from dataclasses import dataclass
-from typing import Optional, List, Callable, Iterable, Tuple, Union, Sequence
+from typing import List, Callable, Iterable, Tuple, Union, Sequence
 
 Tree = Union[str, Sequence["Tree"]]
 
 
-@dataclass
 class Node:
-    position: Optional[float] = None
-    level: Optional[int] = None
+    def __init__(self, position: float, level: int):
+        self.position = position
+        self.level = level
 
     def filter(self, test: Callable[["Node"], bool]) -> Iterable["Node"]:
         if test(self):
             yield self
 
 
-@dataclass
 class Leaf(Node):
-    level: Optional[float] = 0
-    value: str = NotImplemented
+    def __init__(self, position: float, value: str):
+        super().__init__(position=position, level=0)
+        self.value = value
 
 
-@dataclass
 class Parent(Node):
-    children: List["Node"] = NotImplemented
-
-    def __post_init__(self):
-        self.position = self._get_position()
-        self.level = self._get_level()
+    def __init__(self, children: List[Node]):
+        self.children = children
+        super().__init__(position=self._get_position(), level=self._get_level())
 
     def _get_position(self) -> float:
-        child_positions = [child.position for child in self.children]
-        assert None not in child_positions
-        min_child_position = min(child_positions)
-        max_child_position = max(child_positions)
+        min_child_position = self.children[0].position
+        max_child_position = self.children[-1].position
         return (min_child_position + max_child_position)/2
 
     def _get_level(self) -> int:
