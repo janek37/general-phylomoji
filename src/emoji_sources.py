@@ -43,6 +43,6 @@ OPENMOJI = EmojiSource(
 
 TWEMOJI = EmojiSource(
     size=36,
-    zip_path=Path('./svg-sets/twemoji-color-font-master.zip'),
-    path_prefix='twemoji-color-font-master/assets/twemoji-svg/',
+    zip_path=Path('./svg-sets/twemoji-color-font-main.zip'),
+    path_prefix='twemoji-color-font-main/assets/twemoji-svg/',
 )
