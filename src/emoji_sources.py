@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from pathlib import Path
-from zipfile import ZipFile
+from zipfile import ZipFile, Path as ZipPath
+
+from tree_graph import Tree
 
 
 @dataclass
@@ -12,6 +14,13 @@ class EmojiSource:
     uppercase_hex: bool = False
     remove_fe0f: bool = False
 
+    def filter_tree(self, tree: Tree) -> Tree:
+        if isinstance(tree, tuple):
+            filtered = tuple(filter(lambda x: x not in (None, ()), (self.filter_tree(subtree) for subtree in tree)))
+            return filtered[0] if len(filtered) == 1 else filtered
+        else:
+            return tree if self.get_emoji_zip_path(emoji=tree).exists() else None
+
     def get_emoji_path(self, emoji: str) -> str:
         if self.remove_fe0f:
             emoji = emoji.replace('\ufe0f', '')
@@ -21,10 +30,11 @@ class EmojiSource:
         return f'{self.path_prefix}{hex_codepoints}.svg'
 
     def get_emoji_svg(self, emoji: str) -> str:
+        return self.get_emoji_zip_path(emoji=emoji).open().read()
+
+    def get_emoji_zip_path(self, emoji) -> ZipPath:
         emoji_path = self.get_emoji_path(emoji=emoji)
-        with ZipFile(file=self.zip_path) as zip_file:
-            with zip_file.open(emoji_path) as emoji_file:
-                return emoji_file.read().decode()
+        return ZipPath(ZipFile(file=self.zip_path), emoji_path)
 
 
 NOTO_EMOJI = EmojiSource(
