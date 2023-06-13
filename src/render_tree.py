@@ -8,7 +8,7 @@ import svgwrite.shapes
 
 from constants import IMAGE_SIZE
 from polar2cartesian import polar2cartesian
-from tree_graph import Node, Leaf, Parent
+from tree_graph import Node, Parent
 
 
 @dataclass
@@ -32,8 +32,8 @@ class Positioner:
         return self.get_coordinates(level=node.level, position=node.position)
 
 
-def render_tree(tree: Node, radius: float, stroke_width: float) -> sg.FigureElement:
-    position_count = sum(1 for _ in tree.filter(lambda node: isinstance(node, Leaf)))
+def render_tree(tree: Parent, radius: float, stroke_width: float) -> sg.FigureElement:
+    position_count = tree.leaf_count()
     drawing = svgwrite.Drawing(
         size=(IMAGE_SIZE, IMAGE_SIZE),
         profile='tiny',
