@@ -53,3 +53,4 @@ Some included emoji might be not obvious:
 * 🍵 -- tea (Camellia sinensis)
 * 🍫 -- cocoa
 * 🌼 -- daisy (although depictions in various sets may be different)
+* 🫜 -- turnip
