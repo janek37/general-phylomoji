@@ -69,7 +69,7 @@ def main():
     ]
     for emoji_source, directory in sources_directories:
         for tree, filename in trees_filenames:
-            print(f"Generating {filename} fpr {directory}")
+            print(f"Generating {filename} for {directory}")
             os.makedirs(directory, exist_ok=True)
             make_svg_tree(emoji_source.filter_tree(tree), emoji_source, os.path.join(directory, filename))
 
